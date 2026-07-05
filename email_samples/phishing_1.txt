@@ -1,0 +1,15 @@
+From: security@rnicrosoft.com
+Subject: Urgent Action Required
+
+Dear Customer,
+
+This is an urgent notification regarding your online bank account. Our monitoring systems have detected unusual activity, and as a precaution, your account suspended status has been applied temporarily.
+
+Action required: You must verify immediately that you are the legitimate account holder. Failure to comply within 24 hours may result in permanent restrictions on your account and loss of access to online services.
+
+To restore access, click here and login using your username and password. Once logged in, please confirm your identity by following the on-screen instructions.
+
+This is your final warning. Due to the sensitive nature of this security alert, we strongly recommend that you respond now. This is a limited time opportunity to prevent further disruption to your account.
+
+Thank you for your immediate cooperation.
+
