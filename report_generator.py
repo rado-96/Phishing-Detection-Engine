@@ -2,15 +2,26 @@ from pathlib import Path
 
 REPORT_FOLDER = Path("reports")
 
-def generate_report(filename, analysis_results, total_score, classification):
+def generate_report(
+        filename, 
+        analysis_results, 
+        total_score, 
+        classification,
+        confidence,
+        risk_level,
+        recommendation,
+        ):
     """
     Generates a text report containing the results of the phishing analysis.
     """
 
     REPORT_FOLDER.mkdir(exist_ok=True)
 
-    report_name = filename.replace(".txt", "_report.txt")
+    safe_name = Path(filename).stem
+    report_name = f"{safe_name}_report.txt"
     report_path = REPORT_FOLDER / report_name
+
+    print(f"DEBUG REPORT PATH: {report_path}")
     
     # Report Summary
     with open(report_path, "w", encoding="utf-8") as report:
@@ -81,5 +92,11 @@ def generate_report(filename, analysis_results, total_score, classification):
 
         report.write(f"Total Score   : {total_score}\n")
         report.write(f"Classification: {classification}\n")
+        report.write(f"Confidence    : {confidence}%\n")
+        report.write(f"Risk Level    : {risk_level}\n\n")
+
+        report.write("Recommendation\n")
+        report.write("-" * 30 + "\n")
+        report.write(f"{recommendation}\n")
 
     return report_path
