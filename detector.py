@@ -3,21 +3,15 @@ from checks.keyword_checker import check_keywords
 from checks.url_checker import check_urls
 from checks.urgency_checker import check_urgency
 from checks.sender_checker import check_sender
-from risk_engine import calculate_total_score, classify_email
+from risk_engine import (
+    calculate_total_score,
+    calculate_confidence, 
+    classify_email,
+    determine_risk_level,
+    generate_recommendation,
+)
 from report_generator import generate_report
-
-EMAIL_FOLDER = Path("Email_samples")
-
-
-def load_email(filename):
-    """
-    Loads an email from the email_samples folder.
-    """
-
-    file_path = EMAIL_FOLDER / filename
-
-    with open(file_path, "r", encoding="utf-8") as file:
-        return file.read()
+from email_loader import load_email
 
 
 def main():
@@ -104,6 +98,9 @@ def main():
 
         total_score = calculate_total_score(analysis_results)
         classification = classify_email(total_score)
+        confidence = calculate_confidence(total_score)
+        risk_level = determine_risk_level(confidence)
+        recommendation = generate_recommendation(risk_level)
 
         print("\n" + "=" * 30)
         print("ANALYSIS SUMMARY")
@@ -118,18 +115,28 @@ def main():
 
         print(f"Total Score    : {total_score}")
         print(f"Classification : {classification}")
+        print(f"Confidence     : {confidence}%")
+        print(f"Risk Level     : {risk_level}")
+
+        print("\nRecommendation")
+        print("------------------------------")
+        print(recommendation)
 
         report_path = generate_report(
             filename,
             analysis_results,
             total_score,
-            classification
+            classification,
+            confidence,
+            risk_level,
+            recommendation,
         )
 
         print(f"Analysis report has been generated and saved to: {report_path}")
 
-    except FileNotFoundError:
-        print("\nError: File not found inside folder.")
+    except FileNotFoundError as error:
+        print("\nFile error occured:")
+        print(error)
 
     except Exception as error:
         print(f"\nUnexpected error: {error}")
