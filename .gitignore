@@ -1,20 +1,21 @@
-# Python
+# Python cache files
 __pycache__/
-*.py[cod]
-*.pyo
+*.pyc
 
 # Virtual environments
-venv/
 .venv/
-env/
+venv/
 
-# IDE
+# IDE files
 .vscode/
 .idea/
 
-# Operating System
+# Generated reports
+reports/
+
+# Machine learning generated models
+models/*.pkl
+
+# Operating system files
 .DS_Store
 Thumbs.db
-
-# Generated reports
-reports/*.txt
