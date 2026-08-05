@@ -1,6 +1,6 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-def create_features(emails):
+def extract_features(emails):
     """
     Converts email text into numerical TF-IDF features.
 
@@ -20,4 +20,4 @@ def create_features(emails):
 
     features = vectorizer.fit_transform(emails)
 
-    return vectorizer, features
+    return features, vectorizer
