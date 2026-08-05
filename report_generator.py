@@ -20,8 +20,6 @@ def generate_report(
     safe_name = Path(filename).stem
     report_name = f"{safe_name}_report.txt"
     report_path = REPORT_FOLDER / report_name
-
-    print(f"DEBUG REPORT PATH: {report_path}")
     
     # Report Summary
     with open(report_path, "w", encoding="utf-8") as report:
