@@ -12,6 +12,8 @@ from risk_engine import (
 )
 from report_generator import generate_report
 from email_loader import load_email
+from ml.naive_bayes import NaiveBayesDetector
+from hybrid.hybrid_engine import HybridEngine
 
 
 def main():
@@ -35,6 +37,9 @@ def main():
         print("-" * 50)
 
         analysis_results = {}
+
+        ml_detector = NaiveBayesDetector()
+        hybrid_engine = HybridEngine()
 
         found_keywords, keyword_score = check_keywords(email_cleaned)
         analysis_results["keywords"] = found_keywords
@@ -102,8 +107,24 @@ def main():
         risk_level = determine_risk_level(confidence)
         recommendation = generate_recommendation(risk_level)
 
+        rule_result = {
+            "classification": classification,
+            "confidence": confidence,
+            "risk_level": risk_level,
+            "recommendation": recommendation,
+            "total_score": total_score,
+            "scores": analysis_results
+        }
+
+        ml_result = ml_detector.predict(email)
+
+        hybrid_result = hybrid_engine.analyse(
+            rule_result,
+            ml_result
+        )
+
         print("\n" + "=" * 30)
-        print("ANALYSIS SUMMARY")
+        print("RULE-BASED SUMMARY")
         print("=" * 30)
 
         print(f"Keyword Score : {analysis_results['keyword_score']}")
@@ -118,18 +139,53 @@ def main():
         print(f"Confidence     : {confidence}%")
         print(f"Risk Level     : {risk_level}")
 
+        print("\n" + "=" * 30)
+        print("MACHINE LEARNING ANALYSIS")
+        print("=" * 30)
+
+        print(f"Prediction : {ml_result['prediction']}")
+        print(f"Confidence : {ml_result['confidence']}%")
+
+        print("\nProbabilities")
+        print("------------------------------")
+
+        print(
+            f"Legitimate : "
+            f"{ml_result['probabilities']['legitimate']}%"
+        )
+
+        print(
+            f"Phishing   : "
+            f"{ml_result['probabilities']['phishing']}%"
+        )
+
+        print("\n" + "=" * 30)
+        print("HYBRID SECURITY ASSESSMENT")
+        print("=" * 30)
+
+        print(f"Final Classification : "
+              f"{hybrid_result['classification']}")
+
+        print(f"Hybrid Confidence    : "
+              f"{hybrid_result['confidence']}%")
+        
+        print(f"Rule Confidence      : "
+              f"{hybrid_result['rule_analysis']['confidence']}%")
+
+        print(
+            f"ML Confidence        : "
+            f"{hybrid_result['ml_analysis']['confidence']}%"
+        )
+
         print("\nRecommendation")
         print("------------------------------")
         print(recommendation)
 
         report_path = generate_report(
             filename,
-            analysis_results,
-            total_score,
-            classification,
-            confidence,
-            risk_level,
-            recommendation,
+            rule_result,
+            ml_result,
+            hybrid_result,
         )
 
         print(f"Analysis report has been generated and saved to: {report_path}")
